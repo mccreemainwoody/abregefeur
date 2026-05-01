@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.16)
+
+qt_add_executable(abregefeur
+    main.cpp
+)
+
+qt_add_qml_module(abregefeur
+    URI AbregeFeur
+    VERSION 1.0
+    QML_FILES
+        qml/Main.qml
+)
+
+target_link_libraries(abregefeur
+    PRIVATE
+        Qt6::Quick
+)
