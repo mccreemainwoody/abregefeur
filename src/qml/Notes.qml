@@ -2,9 +2,19 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import AbregeFeur.Triggers 1.0
+
 Rectangle {
     Colors {
         id: colors
+    }
+
+    NotesTriggers {
+        id: notesTriggers
+    }
+
+    ListModel {
+        id: notesThread
     }
 
     color: colors.columnBackgroundColor
@@ -34,21 +44,25 @@ Rectangle {
             Layout.fillHeight: true
             clip: true
             spacing: 8
-            model: ListModel {
-                ListElement { content: "Message placeholder utilisateur" }
-                ListElement { content: "Message placeholder assistant" }
-                ListElement { content: "Nouveau message..." }
+            model: notesThread
+
+            Component.onCompleted: {
+                var notes = notesTriggers.getNotes();
+
+                for (var i = 0; i < notes.length; i++) {
+                    notesThread.append(notes[i]);
+                }
             }
 
             delegate: Row {
                 width: ListView.view.width
-                layoutDirection: index % 2 === 0 ? Qt.LeftToRight : Qt.RightToLeft
+                layoutDirection: Qt.LeftToRight
 
                 Rectangle {
                     width: Math.min(parent.width * 0.8, messageText.implicitWidth + 24)
                     height: messageText.implicitHeight + 18
                     radius: 10
-                    color: index % 2 === 0 ? colors.userMessageColor : colors.agentMessageColor
+                    color: colors.userMessageColor
 
                     Text {
                         id: messageText
@@ -66,13 +80,19 @@ Rectangle {
             spacing: 8
 
             TextField {
+                id: noteInput
                 Layout.fillWidth: true
                 placeholderText: "Ecrire un message..."
             }
 
             Button {
                 id: addMessageButton
-                text: "Ajouter"
+                text: "Envoyer"
+                onClicked: {
+                    var note = notesTriggers.addNote(noteInput.text);
+                    notesThread.append(note);
+                    noteInput.text = "";
+                }
                 background: Rectangle {
                     radius: 6
                     color: colors.brightTextColor

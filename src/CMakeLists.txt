@@ -7,6 +7,7 @@ qt_add_executable(abregefeur
 add_subdirectory(utils)
 add_subdirectory(data)
 add_subdirectory(handlers)
+add_subdirectory(triggers)
 
 qt_add_qml_module(abregefeur
     URI AbregeFeur
@@ -21,7 +22,8 @@ qt_add_qml_module(abregefeur
 
 target_link_libraries(abregefeur
     PRIVATE
+        Qt6::Quick
         abregefeur_data
         abregefeur_handlers
-        Qt6::Quick
+        abregefeur_triggersplugin
 )

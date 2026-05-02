@@ -11,10 +11,12 @@ namespace abregefeur::handlers {
         return data::Note::find();
     }
 
-    void NoteRecorder::addNote(const std::string& content) {
+    data::Note NoteRecorder::addNote(const std::string& content) {
         data::Note note(content);
 
         note.save();
+
+        return note;
     }
 
     void NoteRecorder::removeNote(const QUuid& id) {
