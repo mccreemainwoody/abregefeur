@@ -53,3 +53,5 @@ compile_commands.json
 *.bak
 *.swp
 
+# Database
+*.db

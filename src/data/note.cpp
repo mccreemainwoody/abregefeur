@@ -3,46 +3,18 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
-
 #include <format>
 
 #include <timestamp.hpp>
+
+#include "database.hpp"
 
 namespace abregefeur::data {
 
     namespace {
 
         QSqlDatabase requireDatabase() {
-            QSqlDatabase database = QSqlDatabase::database();
-
-            if (!database.isValid()) {
-                throw std::runtime_error(
-                    "No default database connection is configured.");
-            }
-
-            if (!database.isOpen() && !database.open()) {
-                throw std::runtime_error(
-                    std::format("Failed to open sqlite database: {}",
-                                database.lastError().text().toStdString()));
-            }
-
-            return database;
-        }
-
-        void ensureNotesTableExists(QSqlDatabase& database) {
-            QSqlQuery query(database);
-
-            if (!query.exec("CREATE TABLE IF NOT EXISTS notes ("
-                            "id TEXT PRIMARY KEY,"
-                            "content TEXT NOT NULL,"
-                            "creation_timestamp INTEGER NOT NULL,"
-                            "update_timestamp INTEGER,"
-                            "deletion_timestamp INTEGER"
-                            ");")) {
-                throw std::runtime_error(
-                    std::format("Failed to ensure notes table: ",
-                                query.lastError().text().toStdString()));
-            }
+            return Database::getInstance()->getDatabase();
         }
 
     }  // namespace
@@ -92,6 +64,22 @@ namespace abregefeur::data {
                     std::move(deletionTimestamp));
     }
 
+    void Note::setupTable(const QSqlDatabase& database) {
+        QSqlQuery query(database);
+
+        if (!query.exec("CREATE TABLE IF NOT EXISTS notes ("
+                        "id TEXT PRIMARY KEY,"
+                        "content TEXT NOT NULL,"
+                        "creation_timestamp INTEGER NOT NULL,"
+                        "update_timestamp INTEGER,"
+                        "deletion_timestamp INTEGER"
+                        ");")) {
+            throw std::runtime_error(
+                std::format("Failed to ensure notes table: ",
+                            query.lastError().text().toStdString()));
+        }
+    }
+
     void Note::setupQuery(QSqlQuery& query) {
         query.bindValue(":id", m_id.toString(QUuid::WithoutBraces));
 
@@ -115,8 +103,6 @@ namespace abregefeur::data {
 
     std::vector<Note> Note::find() {
         QSqlDatabase database = requireDatabase();
-        ensureNotesTableExists(database);
-
         QSqlQuery query(database);
 
         query.setForwardOnly(true);
@@ -131,8 +117,13 @@ namespace abregefeur::data {
                             query.lastError().text().toStdString()));
         }
 
+        const int results_size = query.size();
         std::vector<Note> results;
-        results.reserve(query.size());
+
+        if (results_size >= 0) {
+            qDebug() << results_size;
+            results.reserve(results_size);
+        }
 
         while (query.next()) {
             results.push_back(fromDatabase(query));
@@ -143,8 +134,6 @@ namespace abregefeur::data {
 
     std::optional<Note> Note::find(const QUuid& id) {
         QSqlDatabase database = requireDatabase();
-        ensureNotesTableExists(database);
-
         QSqlQuery query(database);
 
         query.prepare(
@@ -192,7 +181,6 @@ namespace abregefeur::data {
 
     void Note::save() {
         QSqlDatabase database = requireDatabase();
-        ensureNotesTableExists(database);
 
         QSqlQuery existsQuery(database);
         existsQuery.prepare("SELECT 1 FROM notes WHERE id = :id LIMIT 1;");

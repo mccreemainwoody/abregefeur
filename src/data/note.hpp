@@ -21,6 +21,7 @@ namespace abregefeur::data {
 
         static std::vector<Note> find();
         static std::optional<Note> find(const QUuid& id);
+        static void setupTable(const QSqlDatabase& database);
 
         const QUuid& getId() const;
         const std::string& getContent() const;
