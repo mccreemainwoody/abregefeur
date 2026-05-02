@@ -8,7 +8,11 @@ qt_add_qml_module(abregefeur
     URI AbregeFeur
     VERSION 1.0
     QML_FILES
+        qml/Artifacts.qml
+        qml/Colors.qml
         qml/Main.qml
+        qml/Notes.qml
+        qml/Sources.qml
 )
 
 target_link_libraries(abregefeur
