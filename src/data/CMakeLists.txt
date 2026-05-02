@@ -11,4 +11,5 @@ target_link_libraries(abregefeur_data
     PUBLIC
         Qt6::Core
         Qt6::Sql
+        abregefeur_utils
 )

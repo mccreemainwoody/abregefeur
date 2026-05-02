@@ -11,10 +11,7 @@ namespace abregefeur::data {
        public:
         explicit Note(std::string content);
 
-        static Note fromDatabase(QUuid id, std::string content,
-                                 QDateTime creationTimestamp,
-                                 QDateTime updateTimestamp,
-                                 QDateTime deletionTimestamp);
+        static Note find(const QUuid& id);
 
         QUuid getId() const;
         std::string getContent() const;
@@ -23,8 +20,15 @@ namespace abregefeur::data {
         QDateTime getDeletionTimestamp() const;
 
         void setContent(std::string content);
+        void save();
+        void remove();
 
        private:
+        static Note fromDatabase(QUuid id, std::string content,
+                                 QDateTime creationTimestamp,
+                                 QDateTime updateTimestamp,
+                                 QDateTime deletionTimestamp);
+
         Note(QUuid id, std::string content, QDateTime creationTimestamp,
              QDateTime updateTimestamp, QDateTime deletionTimestamp);
 

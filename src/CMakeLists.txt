@@ -4,6 +4,7 @@ qt_add_executable(abregefeur
     main.cpp
 )
 
+add_subdirectory(utils)
 add_subdirectory(data)
 
 qt_add_qml_module(abregefeur
