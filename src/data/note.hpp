@@ -3,6 +3,7 @@
 #include <QDateTime>
 #include <QUuid>
 
+#include <optional>
 #include <string>
 
 namespace abregefeur::data {
@@ -11,13 +12,13 @@ namespace abregefeur::data {
        public:
         explicit Note(std::string content);
 
-        static Note find(const QUuid& id);
+        static std::optional<Note> find(const QUuid& id);
 
         QUuid getId() const;
         std::string getContent() const;
         QDateTime getCreationTimestamp() const;
-        QDateTime getUpdateTimestamp() const;
-        QDateTime getDeletionTimestamp() const;
+        std::optional<QDateTime> getUpdateTimestamp() const;
+        std::optional<QDateTime> getDeletionTimestamp() const;
 
         void setContent(std::string content);
         void save();
@@ -26,17 +27,18 @@ namespace abregefeur::data {
        private:
         static Note fromDatabase(QUuid id, std::string content,
                                  QDateTime creationTimestamp,
-                                 QDateTime updateTimestamp,
-                                 QDateTime deletionTimestamp);
+                                 std::optional<QDateTime> updateTimestamp,
+                                 std::optional<QDateTime> deletionTimestamp);
 
         Note(QUuid id, std::string content, QDateTime creationTimestamp,
-             QDateTime updateTimestamp, QDateTime deletionTimestamp);
+             std::optional<QDateTime> updateTimestamp,
+             std::optional<QDateTime> deletionTimestamp);
 
         QUuid m_id;
         std::string m_content;
         QDateTime m_creationTimestamp;
-        QDateTime m_updateTimestamp;
-        QDateTime m_deletionTimestamp;
+        std::optional<QDateTime> m_updateTimestamp;
+        std::optional<QDateTime> m_deletionTimestamp;
     };
 
 }  // namespace abregefeur::data

@@ -1,10 +1,13 @@
 #include "note.hpp"
+#include <qdatetime.h>
 
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QTimeZone>
+#include <QVariant>
 
+#include <optional>
 #include <stdexcept>
 #include <utility>
 
@@ -32,12 +35,13 @@ namespace abregefeur::data {
 
         void ensureNotesTableExists(QSqlDatabase& database) {
             QSqlQuery query(database);
+
             if (!query.exec("CREATE TABLE IF NOT EXISTS notes ("
                             "id TEXT PRIMARY KEY,"
                             "content TEXT NOT NULL,"
                             "creation_timestamp INTEGER NOT NULL,"
-                            "update_timestamp INTEGER NOT NULL,"
-                            "deletion_timestamp INTEGER NOT NULL"
+                            "update_timestamp INTEGER,"
+                            "deletion_timestamp INTEGER"
                             ");")) {
                 throw std::runtime_error(("Failed to ensure notes table: " +
                                           query.lastError().text())
@@ -50,23 +54,24 @@ namespace abregefeur::data {
         : m_id(QUuid::createUuid()),
           m_content(std::move(content)),
           m_creationTimestamp(QDateTime::currentDateTimeUtc()),
-          m_updateTimestamp(utils::zeroTimestamp()),
-          m_deletionTimestamp(utils::zeroTimestamp()) {}
+          m_updateTimestamp(std::nullopt),
+          m_deletionTimestamp(std::nullopt) {}
 
     Note Note::fromDatabase(QUuid id, std::string content,
                             QDateTime creationTimestamp,
-                            QDateTime updateTimestamp,
-                            QDateTime deletionTimestamp) {
+                            std::optional<QDateTime> updateTimestamp,
+                            std::optional<QDateTime> deletionTimestamp) {
         return Note(std::move(id), std::move(content),
                     std::move(creationTimestamp), std::move(updateTimestamp),
                     std::move(deletionTimestamp));
     }
 
-    Note Note::find(const QUuid& id) {
+    std::optional<Note> Note::find(const QUuid& id) {
         QSqlDatabase database = requireDatabase();
         ensureNotesTableExists(database);
 
         QSqlQuery query(database);
+
         query.prepare(
             "SELECT id, content, creation_timestamp, update_timestamp, "
             "deletion_timestamp "
@@ -78,18 +83,31 @@ namespace abregefeur::data {
                 ("Failed to query note: " + query.lastError().text())
                     .toStdString());
         }
+
         if (!query.next()) {
-            throw std::runtime_error("Note not found.");
+            return std::nullopt;
         }
 
         const QUuid noteId(query.value(0).toString());
+
         const std::string content = query.value(1).toString().toStdString();
+
         const QDateTime creationTimestamp =
             utils::fromTimestampMs(query.value(2).toLongLong());
-        const QDateTime updateTimestamp =
-            utils::fromTimestampMs(query.value(3).toLongLong());
-        const QDateTime deletionTimestamp =
-            utils::fromTimestampMs(query.value(4).toLongLong());
+
+        const auto updateTimestampValue = query.value(3);
+        const std::optional<QDateTime> updateTimestamp =
+            updateTimestampValue.isNull()
+                ? std::nullopt
+                : std::make_optional(utils::fromTimestampMs(
+                      updateTimestampValue.toLongLong()));
+
+        const auto deletionTimestampValue = query.value(4);
+        const std::optional<QDateTime> deletionTimestamp =
+            deletionTimestampValue.isNull()
+                ? std::nullopt
+                : std::make_optional(utils::fromTimestampMs(
+                      deletionTimestampValue.toLongLong()));
 
         return fromDatabase(noteId, content, creationTimestamp, updateTimestamp,
                             deletionTimestamp);
@@ -107,11 +125,11 @@ namespace abregefeur::data {
         return m_creationTimestamp;
     }
 
-    QDateTime Note::getUpdateTimestamp() const {
+    std::optional<QDateTime> Note::getUpdateTimestamp() const {
         return m_updateTimestamp;
     }
 
-    QDateTime Note::getDeletionTimestamp() const {
+    std::optional<QDateTime> Note::getDeletionTimestamp() const {
         return m_deletionTimestamp;
     }
 
@@ -138,41 +156,58 @@ namespace abregefeur::data {
             m_updateTimestamp = QDateTime::currentDateTimeUtc();
 
             QSqlQuery updateQuery(database);
+
             updateQuery.prepare(
                 "UPDATE notes "
                 "SET content = :content, update_timestamp = :update_timestamp, "
                 "deletion_timestamp = :deletion_timestamp "
                 "WHERE id = :id;");
+
+            updateQuery.bindValue(":id", m_id.toString(QUuid::WithoutBraces));
             updateQuery.bindValue(":content",
                                   QString::fromStdString(m_content));
-            updateQuery.bindValue(":update_timestamp",
-                                  utils::toTimestampMs(m_updateTimestamp));
-            updateQuery.bindValue(":deletion_timestamp",
-                                  utils::toTimestampMs(m_deletionTimestamp));
-            updateQuery.bindValue(":id", m_id.toString(QUuid::WithoutBraces));
+            updateQuery.bindValue(
+                ":update_timestamp",
+                m_updateTimestamp ? QVariant::fromValue(utils::toTimestampMs(
+                                        *m_updateTimestamp))
+                                  : QVariant());
+            updateQuery.bindValue(
+                ":deletion_timestamp",
+                m_deletionTimestamp ? QVariant::fromValue(utils::toTimestampMs(
+                                          *m_deletionTimestamp))
+                                    : QVariant());
 
             if (!updateQuery.exec()) {
                 throw std::runtime_error(
                     ("Failed to update note: " + updateQuery.lastError().text())
                         .toStdString());
             }
+
             return;
         }
 
         QSqlQuery insertQuery(database);
+
         insertQuery.prepare(
             "INSERT INTO notes (id, content, creation_timestamp, "
             "update_timestamp, deletion_timestamp) "
             "VALUES (:id, :content, :creation_timestamp, :update_timestamp, "
             ":deletion_timestamp);");
+
         insertQuery.bindValue(":id", m_id.toString(QUuid::WithoutBraces));
         insertQuery.bindValue(":content", QString::fromStdString(m_content));
         insertQuery.bindValue(":creation_timestamp",
                               utils::toTimestampMs(m_creationTimestamp));
-        insertQuery.bindValue(":update_timestamp",
-                              utils::toTimestampMs(m_updateTimestamp));
+        insertQuery.bindValue(
+            ":update_timestamp",
+            m_updateTimestamp
+                ? QVariant::fromValue(utils::toTimestampMs(*m_updateTimestamp))
+                : QVariant());
         insertQuery.bindValue(":deletion_timestamp",
-                              utils::toTimestampMs(m_deletionTimestamp));
+                              m_deletionTimestamp
+                                  ? QVariant::fromValue(utils::toTimestampMs(
+                                        *m_deletionTimestamp))
+                                  : QVariant());
 
         if (!insertQuery.exec()) {
             throw std::runtime_error(
@@ -187,7 +222,8 @@ namespace abregefeur::data {
     }
 
     Note::Note(QUuid id, std::string content, QDateTime creationTimestamp,
-               QDateTime updateTimestamp, QDateTime deletionTimestamp)
+               std::optional<QDateTime> updateTimestamp,
+               std::optional<QDateTime> deletionTimestamp)
         : m_id(std::move(id)),
           m_content(std::move(content)),
           m_creationTimestamp(std::move(creationTimestamp)),
