@@ -8,17 +8,7 @@ add_subdirectory(utils)
 add_subdirectory(data)
 add_subdirectory(handlers)
 add_subdirectory(triggers)
-
-qt_add_qml_module(abregefeur
-    URI AbregeFeur
-    VERSION 1.0
-    QML_FILES
-        qml/Artifacts.qml
-        qml/Colors.qml
-        qml/Main.qml
-        qml/Notes.qml
-        qml/Sources.qml
-)
+add_subdirectory(qml)
 
 target_link_libraries(abregefeur
     PRIVATE
@@ -26,4 +16,5 @@ target_link_libraries(abregefeur
         abregefeur_data
         abregefeur_handlers
         abregefeur_triggersplugin
+        abregefeur_qmlplugin
 )
