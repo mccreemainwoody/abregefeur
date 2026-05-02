@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.25)
+
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core Sql)
 
 add_library(abregefeur_utils STATIC
     timestamp.hpp
@@ -11,6 +13,6 @@ target_include_directories(abregefeur_utils
 )
 
 target_link_libraries(abregefeur_utils
-    PUBLIC
+    PRIVATE
         Qt6::Core
 )
