@@ -12,33 +12,39 @@ namespace abregefeur::data {
 
     class Note {
        public:
-        explicit Note(std::string content);
+        explicit Note(const std::string& content);
+
+        Note(const Note&) = delete;
+        Note(Note&&) noexcept = default;
+        Note& operator=(const Note&) = delete;
+        Note& operator=(Note&&) = delete;
 
         static std::vector<Note> find();
         static std::optional<Note> find(const QUuid& id);
 
-        QUuid getId() const;
-        std::string getContent() const;
-        QDateTime getCreationTimestamp() const;
-        std::optional<QDateTime> getUpdateTimestamp() const;
-        std::optional<QDateTime> getDeletionTimestamp() const;
+        const QUuid& getId() const;
+        const std::string& getContent() const;
+        const QDateTime& getCreationTimestamp() const;
+        const std::optional<QDateTime>& getUpdateTimestamp() const;
+        const std::optional<QDateTime>& getDeletionTimestamp() const;
 
-        void setContent(std::string content);
+        void setContent(const std::string& content);
         void save();
         void remove();
 
        private:
         static Note fromDatabase(const QSqlQuery& queryResult);
 
-        Note(QUuid id, std::string content, QDateTime creationTimestamp,
-             std::optional<QDateTime> updateTimestamp,
-             std::optional<QDateTime> deletionTimestamp);
+        Note(const QUuid& id, const std::string& content,
+             const QDateTime& creationTimestamp,
+             const std::optional<QDateTime>& updateTimestamp,
+             const std::optional<QDateTime>& deletionTimestamp);
 
         void setupQuery(QSqlQuery& query);
 
-        QUuid m_id;
+        const QUuid m_id;
         std::string m_content;
-        QDateTime m_creationTimestamp;
+        const QDateTime m_creationTimestamp;
         std::optional<QDateTime> m_updateTimestamp;
         std::optional<QDateTime> m_deletionTimestamp;
     };

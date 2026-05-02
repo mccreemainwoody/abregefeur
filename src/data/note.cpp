@@ -5,6 +5,7 @@
 #include <QSqlQuery>
 
 #include <format>
+
 #include <timestamp.hpp>
 
 namespace abregefeur::data {
@@ -46,16 +47,17 @@ namespace abregefeur::data {
 
     }  // namespace
 
-    Note::Note(std::string content)
+    Note::Note(const std::string& content)
         : m_id(QUuid::createUuid()),
-          m_content(std::move(content)),
+          m_content(content),
           m_creationTimestamp(QDateTime::currentDateTimeUtc()),
           m_updateTimestamp(std::nullopt),
           m_deletionTimestamp(std::nullopt) {}
 
-    Note::Note(QUuid id, std::string content, QDateTime creationTimestamp,
-               std::optional<QDateTime> updateTimestamp,
-               std::optional<QDateTime> deletionTimestamp)
+    Note::Note(const QUuid& id, const std::string& content,
+               const QDateTime& creationTimestamp,
+               const std::optional<QDateTime>& updateTimestamp,
+               const std::optional<QDateTime>& deletionTimestamp)
         : m_id(std::move(id)),
           m_content(std::move(content)),
           m_creationTimestamp(std::move(creationTimestamp)),
@@ -164,28 +166,28 @@ namespace abregefeur::data {
         return fromDatabase(query);
     }
 
-    QUuid Note::getId() const {
+    const QUuid& Note::getId() const {
         return m_id;
     }
 
-    std::string Note::getContent() const {
+    const std::string& Note::getContent() const {
         return m_content;
     }
 
-    QDateTime Note::getCreationTimestamp() const {
+    const QDateTime& Note::getCreationTimestamp() const {
         return m_creationTimestamp;
     }
 
-    std::optional<QDateTime> Note::getUpdateTimestamp() const {
+    const std::optional<QDateTime>& Note::getUpdateTimestamp() const {
         return m_updateTimestamp;
     }
 
-    std::optional<QDateTime> Note::getDeletionTimestamp() const {
+    const std::optional<QDateTime>& Note::getDeletionTimestamp() const {
         return m_deletionTimestamp;
     }
 
-    void Note::setContent(std::string content) {
-        m_content = std::move(content);
+    void Note::setContent(const std::string& content) {
+        m_content = content;
     }
 
     void Note::save() {
@@ -202,6 +204,7 @@ namespace abregefeur::data {
                             m_id.toString().toStdString(),
                             existsQuery.lastError().text().toStdString()));
         }
+
         const bool exists = existsQuery.next();
 
         if (exists) {
