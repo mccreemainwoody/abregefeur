@@ -15,11 +15,17 @@ add_subdirectory(handlers)
 add_subdirectory(triggers)
 add_subdirectory(qml)
 
+add_library(AbregeFeur::Utils    ALIAS abregefeur_utils)
+add_library(AbregeFeur::Data     ALIAS abregefeur_data)
+add_library(AbregeFeur::Handlers ALIAS abregefeur_handlers)
+add_library(AbregeFeur::Triggers ALIAS abregefeur_triggers)
+add_library(AbregeFeur::Qml      ALIAS abregefeur_qml)
+
 target_link_libraries(abregefeur
     PRIVATE
         Qt6::Quick
-        abregefeur_data
-        abregefeur_handlers
-        abregefeur_triggersplugin
+        AbregeFeur::Utils
+        AbregeFeur::Data
+        AbregeFeur::Handlers
         abregefeur_qmlplugin
 )
