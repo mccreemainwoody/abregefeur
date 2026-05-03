@@ -4,14 +4,15 @@ find_package(Qt6 6.10 REQUIRED COMPONENTS Sql)
 
 add_library(abregefeur_data STATIC
     database.cpp
-    database.hpp
     note.cpp
-    note.hpp
 )
 
 target_include_directories(abregefeur_data
-    INTERFACE
-        ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/detail
 )
 
 target_link_libraries(abregefeur_data

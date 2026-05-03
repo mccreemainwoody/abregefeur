@@ -1,4 +1,4 @@
-#include "database.hpp"
+#include <abregefeur/data/database.hpp>
 
 #include <QSqlDatabase>
 #include <QSqlError>

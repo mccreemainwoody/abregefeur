@@ -3,7 +3,7 @@
 #include <QUuid>
 #include <vector>
 
-#include <note.hpp>
+#include <abregefeur/data/note.hpp>
 
 namespace abregefeur::handlers {
 

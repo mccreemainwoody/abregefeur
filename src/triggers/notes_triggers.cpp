@@ -3,7 +3,7 @@
 #include <QList>
 #include <QString>
 
-#include <note.hpp>
+#include <abregefeur/data/note.hpp>
 
 namespace abregefeur::triggers {
 

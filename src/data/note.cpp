@@ -1,13 +1,12 @@
-#include "note.hpp"
+#include <abregefeur/data/note.hpp>
 
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <format>
 
-#include <timestamp.hpp>
-
-#include "database.hpp"
+#include <abregefeur/data/database.hpp>
+#include <abregefeur/utils/timestamp.hpp>
 
 namespace abregefeur::data {
 

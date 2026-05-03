@@ -1,9 +1,9 @@
-#include "note_recorder.hpp"
+#include <abregefeur/handlers/note_recorder/note_recorder.hpp>
 
 #include <QUuid>
 #include <vector>
 
-#include <note.hpp>
+#include <abregefeur/data/note.hpp>
 
 namespace abregefeur::handlers {
 

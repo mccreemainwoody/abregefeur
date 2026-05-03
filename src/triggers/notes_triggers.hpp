@@ -1,13 +1,13 @@
 #pragma once
 
+#include <QList>
 #include <QObject>
 #include <QString>
-#include <QList>
 #include <QtQmlIntegration/QtQmlIntegration>
 
-#include <note.hpp>
-#include <note_recorder.hpp>
-#include <note_view.hpp>
+#include <abregefeur/data/note.hpp>
+#include <abregefeur/handlers/note_recorder/note_recorder.hpp>
+#include "note_view.hpp"
 
 namespace abregefeur::triggers {
 
@@ -15,7 +15,7 @@ namespace abregefeur::triggers {
         Q_OBJECT
         QML_ELEMENT
 
-        public:
+       public:
         explicit NotesTriggers(QObject* parent = nullptr);
 
         Q_INVOKABLE QList<NoteView> getNotes();
