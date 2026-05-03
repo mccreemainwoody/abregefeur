@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <libai/utils/http.hpp>
+
 namespace libai::providers {
 
     class AIProvider {
@@ -21,7 +23,7 @@ namespace libai::providers {
             const std::string& model_name, const std::string& prompt) const = 0;
 
        protected:
-        virtual curl_slist* getBaseHeaders() const = 0;
+        virtual utils::http::wrapped_curl_slist getBaseHeaders() const = 0;
 
         const std::string name_;
         const std::string root_url_;

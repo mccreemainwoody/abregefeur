@@ -18,7 +18,6 @@ add_subdirectory(qml)
 target_link_libraries(abregefeur
     PRIVATE
         Qt6::Quick
-        libai
         abregefeur_data
         abregefeur_handlers
         abregefeur_triggersplugin
