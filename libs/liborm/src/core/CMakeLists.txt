@@ -4,6 +4,7 @@ target_sources(liborm
     PRIVATE
         database.cpp
         entity.cpp
+        repository.cpp
 )
 
 target_link_libraries(liborm
