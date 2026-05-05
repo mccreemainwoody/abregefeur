@@ -4,11 +4,10 @@ target_sources(liborm
     PRIVATE
         database.cpp
         entity.cpp
-        repository.cpp
 )
 
 target_link_libraries(liborm
-    PRIVATE
+    PUBLIC
         Qt6::Core
         Qt6::Sql
 )

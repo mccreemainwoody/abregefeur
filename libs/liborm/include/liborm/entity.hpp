@@ -14,6 +14,10 @@ namespace liborm {
         static const std::string& getCols();
         static const std::string& getInsertQuery();
         static const std::string& getUpdateQuery();
+        static void setupTable(const QSqlDatabase& database);
+
+        Entity();
+        Entity(const QSqlQuery& queryResult);
 
         const QUuid& getId() const;
         const QDateTime& getCreationTimestamp() const;
@@ -28,11 +32,9 @@ namespace liborm {
         void bindQuery(QSqlQuery& query) const;
 
        protected:
-        Entity();
         Entity(const QUuid& id, const QDateTime& creationTimestamp,
                const std::optional<QDateTime>& updateTimestamp,
                const std::optional<QDateTime>& deletionTimestamp);
-        Entity(const QSqlQuery& queryResult);
 
         void bindQueryBase(QSqlQuery& query) const;
         virtual void bindQueryChild(QSqlQuery& query) const = 0;

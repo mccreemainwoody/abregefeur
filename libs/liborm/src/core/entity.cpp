@@ -1,3 +1,4 @@
+#include <qsqldatabase.h>
 #include <liborm/entity.hpp>
 
 #include <QDateTime>
@@ -50,6 +51,10 @@ namespace liborm {
     }
 
     const std::string& Entity::getUpdateQuery() {
+        throwNotImplementedStaticMethod();
+    }
+
+    void Entity::setupTable(const QSqlDatabase& database) {
         throwNotImplementedStaticMethod();
     }
 

@@ -2,6 +2,7 @@
 
 #include <QDateTime>
 #include <QTimeZone>
+#include <QtTypes>
 
 namespace liborm::utils {
 
@@ -9,7 +10,7 @@ namespace liborm::utils {
         return dateTime.toMSecsSinceEpoch();
     }
 
-    inline QDateTime fromTimestampMs(qint64 timestampMs) {
+    inline QDateTime fromTimestampMs(const qint64 timestampMs) {
         return QDateTime::fromMSecsSinceEpoch(timestampMs, QTimeZone::UTC);
     }
 
