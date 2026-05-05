@@ -7,6 +7,8 @@ add_library(liborm SHARED)
 target_include_directories(liborm
     PUBLIC
         include/
+    PRIVATE
+        detail/
 )
 
 add_subdirectory(src)
