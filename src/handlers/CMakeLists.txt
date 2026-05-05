@@ -10,4 +10,5 @@ target_include_directories(abregefeur_handlers
         ${PROJECT_SOURCE_DIR}/detail
 )
 
+add_subdirectory(artifact_generator)
 add_subdirectory(note_recorder)

@@ -7,7 +7,8 @@ target_sources(libai
 )
 
 target_link_libraries(libai
-    PRIVATE
+    PUBLIC
         CURL::libcurl
+    PRIVATE
         nlohmann_json::nlohmann_json
 )

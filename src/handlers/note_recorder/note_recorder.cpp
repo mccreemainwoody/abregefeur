@@ -1,4 +1,4 @@
-#include <abregefeur/handlers/note_recorder/note_recorder.hpp>
+#include <abregefeur/handlers/note_recorder.hpp>
 
 #include <QUuid>
 #include <liborm/repository.hpp>

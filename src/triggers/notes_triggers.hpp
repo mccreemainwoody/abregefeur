@@ -6,7 +6,7 @@
 #include <QtQmlIntegration/QtQmlIntegration>
 
 #include <abregefeur/data/note.hpp>
-#include <abregefeur/handlers/note_recorder/note_recorder.hpp>
+#include <abregefeur/handlers/note_recorder.hpp>
 #include "note_view.hpp"
 
 namespace abregefeur::triggers {
