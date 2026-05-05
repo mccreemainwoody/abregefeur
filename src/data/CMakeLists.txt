@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.25)
 find_package(Qt6 6.10 REQUIRED COMPONENTS Sql)
 
 add_library(abregefeur_data STATIC
+    artifact.cpp
     note.cpp
 )
 
