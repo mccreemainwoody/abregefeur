@@ -11,8 +11,3 @@ target_include_directories(abregefeur_utils
     PRIVATE
         ${PROJECT_SOURCE_DIR}/detail
 )
-
-target_link_libraries(abregefeur_utils
-    PRIVATE
-        Qt6::Core
-)

@@ -1,53 +1,45 @@
 #pragma once
 
 #include <QDateTime>
+#include <QSqlQuery>
 #include <QUuid>
-#include <QtSql/QSqlQuery>
 
 #include <optional>
 #include <string>
-#include <vector>
+
+#include <liborm/entity.hpp>
 
 namespace abregefeur::data {
 
-    class Note {
+    class Note : public liborm::Entity {
        public:
-        explicit Note(const std::string& content);
-
-        Note(const Note&) = delete;
-        Note(Note&&) noexcept = default;
-        Note& operator=(const Note&) = delete;
-        Note& operator=(Note&&) = delete;
-
-        static std::vector<Note> find();
-        static std::optional<Note> find(const QUuid& id);
+        static const std::string& getTableName();
+        static const std::string& getCols();
+        static const std::string& getInsertQuery();
+        static const std::string& getUpdateQuery();
         static void setupTable(const QSqlDatabase& database);
 
-        const QUuid& getId() const;
+        Note(const std::string& content);
+        Note(const QSqlQuery& queryResult);
+
         const std::string& getContent() const;
-        const QDateTime& getCreationTimestamp() const;
-        const std::optional<QDateTime>& getUpdateTimestamp() const;
-        const std::optional<QDateTime>& getDeletionTimestamp() const;
 
         void setContent(const std::string& content);
-        void save();
-        void remove();
 
-       private:
-        static Note fromDatabase(const QSqlQuery& queryResult);
+       protected:
+        static const std::string tableName_;
+        static const std::string cols_;
+        static const std::string insertQuery_;
+        static const std::string updateQuery_;
 
         Note(const QUuid& id, const std::string& content,
              const QDateTime& creationTimestamp,
              const std::optional<QDateTime>& updateTimestamp,
              const std::optional<QDateTime>& deletionTimestamp);
 
-        void setupQuery(QSqlQuery& query);
+        void bindQueryChild(QSqlQuery& query) const;
 
-        const QUuid m_id;
-        std::string m_content;
-        const QDateTime m_creationTimestamp;
-        std::optional<QDateTime> m_updateTimestamp;
-        std::optional<QDateTime> m_deletionTimestamp;
+        std::string content_;
     };
 
 }  // namespace abregefeur::data

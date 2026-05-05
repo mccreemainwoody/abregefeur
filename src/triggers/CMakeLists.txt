@@ -16,7 +16,7 @@ qt_add_qml_module(abregefeur_triggers
 )
 
 target_link_libraries(abregefeur_triggers
-    PRIVATE
+    PUBLIC
         Qt6::Core
         Qt6::Qml
         abregefeur_data

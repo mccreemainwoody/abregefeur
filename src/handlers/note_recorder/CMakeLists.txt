@@ -8,7 +8,9 @@ target_sources(abregefeur_handlers
 )
 
 target_link_libraries(abregefeur_handlers
-    PRIVATE
+    PUBLIC
         Qt6::Core
         abregefeur_data
+    PRIVATE
+        liborm
 )

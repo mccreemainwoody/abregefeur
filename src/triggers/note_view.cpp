@@ -1,6 +1,7 @@
 #include "note_view.hpp"
 
-#include <utility>
+#include <QString>
+#include <QUuid>
 
 namespace abregefeur::triggers {
 
