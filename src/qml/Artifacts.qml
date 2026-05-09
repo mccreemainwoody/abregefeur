@@ -2,9 +2,29 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import AbregeFeur.Triggers 1.0
+
 Rectangle {
+    property Notes notesContext: null
+
     Colors {
         id: colors
+    }
+
+    ArtifactsTriggers {
+        id: artifactsTriggers
+    }
+
+    ListModel {
+        id: allArtifacts
+    }
+
+    Component.onCompleted: {
+        let artifacts = artifactsTriggers.getArtifacts();
+
+        for (let i = 0; i < artifacts.length; i++) {
+            allArtifacts.append(artifacts[i]);
+        }
     }
 
     color: colors.columnBackgroundColor
@@ -34,53 +54,41 @@ Rectangle {
             spacing: 8
 
             Button {
-                id: audioButton
-                text: "Audio Summary"
-                Layout.fillWidth: true
-                background: Rectangle {
-                    radius: 6
-                    color: colors.audioSummaryArtifactTypeColor
-                }
-                contentItem: Text {
-                    text: audioButton.text
-                    color: colors.brightTextColor
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: 14
-                }
-            }
+                id: markdownSummaryGenButton
+                text: "Markdown Summary"
+                readonly property int genType: ArtifactType.SUMMARY_MARKDOWN
 
-            Button {
-                id: visualButton
-                text: "Visual Summary"
                 Layout.fillWidth: true
-                background: Rectangle {
-                    radius: 6
-                    color: colors.visualSummaryArtifactTypeColor
-                }
-                contentItem: Text {
-                    text: visualButton.text
-                    color: colors.brightTextColor
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: 14
-                }
-            }
 
-            Button {
-                id: writtenButton
-                text: "Written Summary"
-                Layout.fillWidth: true
                 background: Rectangle {
                     radius: 6
-                    color: colors.writtenSummaryTypeColor
+                    color: colors.colorForArtifactType(markdownSummaryGenButton.genType)
                 }
+
                 contentItem: Text {
-                    text: writtenButton.text
+                    text: markdownSummaryGenButton.text
                     color: colors.brightTextColor
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.pixelSize: 14
+                }
+
+                onClicked: {
+                    if (!notesContext || typeof notesContext.getCurrentNotes !== "function") {
+                        console.error("Artifacts: notesContext must provide getCurrentNotes()");
+                        return;
+                    }
+
+                    const extras = "";
+
+                    const notes = notesContext.getCurrentNotes();
+
+                    const artifact = artifactsTriggers.generateArtifact(
+                                         markdownSummaryGenButton.genType,
+                                         notes,
+                                         extras);
+
+                    allArtifacts.append(artifact);
                 }
             }
         }
@@ -96,14 +104,7 @@ Rectangle {
             Layout.fillHeight: true
             clip: true
             spacing: 8
-            model: ListModel {
-                ListElement {
-                    artifactType: "Audio Summary"
-                }
-                ListElement {
-                    artifactType: "Written Summary"
-                }
-            }
+            model: allArtifacts
 
             delegate: Rectangle {
                 width: ListView.view.width
@@ -114,12 +115,8 @@ Rectangle {
 
                 Text {
                     anchors.centerIn: parent
-                    text: artifactType
-                    color: artifactType === "Audio Summary"
-                           ? colors.audioSummaryArtifactTypeColor
-                           : artifactType === "Visual Summary"
-                             ? colors.visualSummaryArtifactTypeColor
-                             : colors.writtenSummaryTypeColor
+                    text: path
+                    color: colors.colorForArtifactType(type)
                     font.pixelSize: 14
                     font.bold: true
                 }

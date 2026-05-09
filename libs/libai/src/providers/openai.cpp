@@ -1,3 +1,4 @@
+#include <iostream>
 #include <libai/providers/openai.hpp>
 
 #include <curl/curl.h>
@@ -47,7 +48,7 @@ namespace libai::providers {
 
         std::vector<std::string> available_models;
 
-        for (const auto& item : payload) {
+        for (const auto& item : payload["data"]) {
             if (!item.contains("id") || !item["id"].is_string()) {
                 continue;
             }
@@ -70,6 +71,7 @@ namespace libai::providers {
             {"max_output_tokens", max_tokens_},
             {"stream", false},
         };
+
         const std::string response = utils::http::executeRequest(
             responses_endpoint, headers.get(), payload.dump());
 

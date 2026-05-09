@@ -1,5 +1,7 @@
 import QtQuick
 
+import AbregeFeur.Triggers 1.0
+
 QtObject {
     // Background
     readonly property color backgroundColor: "#000000"
@@ -14,12 +16,18 @@ QtObject {
     // Column
     readonly property color columnBorderColor: "#666666"
 
-    // Summary Types
-    readonly property color audioSummaryArtifactTypeColor: "#e67e22"
-    readonly property color visualSummaryArtifactTypeColor: "#2980b9"
-    readonly property color writtenSummaryTypeColor: "#27ae60"
-
     // Notes Chatbox
     readonly property color userMessageColor: "#4e6c8f"
     readonly property color agentMessageColor: "#5a5a5a"
+
+    // Summary Types
+    readonly property color markdownSummaryArtifactTypeColor: "#2980b9"
+
+    function colorForArtifactType(value) {
+        if (value === ArtifactType.SUMMARY_MARKDOWN) {
+            return markdownSummaryArtifactTypeColor;
+        }
+
+        return primaryTextColor;
+    }
 }

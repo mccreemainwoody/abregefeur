@@ -31,6 +31,7 @@ Window {
         }
 
         Notes {
+            id: notesColumn
             width: root.columnWidth
             height: parent.height
         }
@@ -38,6 +39,7 @@ Window {
         Artifacts {
             width: root.columnWidth
             height: parent.height
+            notesContext: notesColumn
         }
     }
 }

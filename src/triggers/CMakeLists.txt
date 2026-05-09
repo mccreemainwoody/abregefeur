@@ -9,6 +9,10 @@ qt_add_qml_module(abregefeur_triggers
     VERSION 1.0
     OUTPUT_DIRECTORY AbregeFeur/Triggers
     SOURCES
+        artifact_view.cpp
+        artifact_view.hpp
+        artifacts_triggers.cpp
+        artifacts_triggers.hpp
         note_view.cpp
         note_view.hpp
         notes_triggers.cpp

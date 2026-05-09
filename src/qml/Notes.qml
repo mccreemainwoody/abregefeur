@@ -5,6 +5,10 @@ import QtQuick.Layouts
 import AbregeFeur.Triggers 1.0
 
 Rectangle {
+    function getCurrentNotes() {
+        return notesTriggers.getNotes();
+    }
+
     Colors {
         id: colors
     }
@@ -15,6 +19,14 @@ Rectangle {
 
     ListModel {
         id: notesThread
+    }
+
+    Component.onCompleted: {
+        var notes = notesTriggers.getNotes();
+
+        for (var i = 0; i < notes.length; i++) {
+            notesThread.append(notes[i]);
+        }
     }
 
     color: colors.columnBackgroundColor
@@ -45,14 +57,6 @@ Rectangle {
             clip: true
             spacing: 8
             model: notesThread
-
-            Component.onCompleted: {
-                var notes = notesTriggers.getNotes();
-
-                for (var i = 0; i < notes.length; i++) {
-                    notesThread.append(notes[i]);
-                }
-            }
 
             delegate: Row {
                 width: ListView.view.width
