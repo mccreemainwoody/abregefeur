@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 
+option(ABREGEFEUR_ENABLE_QT_DEPLOY "Install abregefeur with Qt deploy" OFF)
+
 include(GNUInstallDirs)
 
 find_package(Qt6 6.10 REQUIRED COMPONENTS Core Quick Qml Sql)
@@ -38,8 +40,10 @@ install(TARGETS abregefeur
         DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-qt_generate_deploy_qml_app_script(TARGET abregefeur
-    OUTPUT_SCRIPT
-        deploy_script
-)
-install(SCRIPT ${deploy_script})
+if (ABREGEFEUR_ENABLE_QT_DEPLOY)
+    qt_generate_deploy_qml_app_script(TARGET abregefeur
+        OUTPUT_SCRIPT
+            deploy_script
+    )
+    install(SCRIPT ${deploy_script})
+endif()
