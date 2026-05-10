@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QUuid>
+#include <string>
 #include <vector>
 
 #include <abregefeur/data/note.hpp>

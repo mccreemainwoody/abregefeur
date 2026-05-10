@@ -3,7 +3,10 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QString>
 #include <format>
+#include <stdexcept>
+#include <string>
 
 #include <abregefeur/data/database.hpp>
 

@@ -3,6 +3,7 @@
 #include <curl/curl.h>
 #include <memory>
 #include <nlohmann/json.hpp>
+#include <string>
 
 using nlohmann::json;
 

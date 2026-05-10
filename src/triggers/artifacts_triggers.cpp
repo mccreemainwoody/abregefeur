@@ -14,6 +14,12 @@
 
 namespace abregefeur::triggers {
 
+    namespace {
+        const std::string extractContent(const NoteView& view) {
+            return view.content.toStdString();
+        }
+    }  // namespace
+
     ArtifactsTriggers::ArtifactsTriggers(QObject* parent) : QObject(parent) {}
 
     ArtifactView ArtifactsTriggers::toArtifactView(
@@ -23,10 +29,8 @@ namespace abregefeur::triggers {
     };
 
     QList<ArtifactView> ArtifactsTriggers::getArtifacts() const {
-        std::vector<data::Artifact> artifacts =
-            liborm::repository::find<data::Artifact>();
-
-        return artifacts | std::views::transform(toArtifactView) |
+        return liborm::repository::find<data::Artifact>() |
+               std::views::transform(toArtifactView) |
                std::ranges::to<QList<ArtifactView>>();
     };
 
@@ -36,9 +40,7 @@ namespace abregefeur::triggers {
         data::ArtifactType type = static_cast<data::ArtifactType>(typeInput);
 
         const std::vector<std::string> noteStrings =
-            notes | std::views::transform([](const NoteView& view) {
-                return view.content.toStdString();
-            }) |
+            notes | std::views::transform(extractContent) |
             std::ranges::to<std::vector<std::string>>();
 
         // TODO: define proper dependency injection for API key

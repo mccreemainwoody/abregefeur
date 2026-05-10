@@ -1,5 +1,5 @@
 {
-  description = "An note synthesizer that uses AI to make better summaries.";
+  description = "A note synthesizer that uses AI to make better summaries.";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";

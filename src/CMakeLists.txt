@@ -28,8 +28,6 @@ add_library(AbregeFeur::Qml      ALIAS abregefeur_qml)
 target_link_libraries(abregefeur
     PRIVATE
         Qt6::Quick
-        liborm
-        AbregeFeur::Triggers
         abregefeur_qmlplugin
 )
 

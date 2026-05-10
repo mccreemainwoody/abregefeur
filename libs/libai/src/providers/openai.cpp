@@ -1,11 +1,9 @@
-#include <iostream>
 #include <libai/providers/openai.hpp>
 
 #include <curl/curl.h>
-#include <nlohmann/json.hpp>
-
 #include <format>
 #include <memory>
+#include <nlohmann/json.hpp>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -56,7 +54,7 @@ namespace libai::providers {
             available_models.push_back(item["id"].get<std::string>());
         }
 
-        return available_models;
+        return std::move(available_models);
     }
 
     const std::string OpenAI::generateSingleResponse(

@@ -3,7 +3,10 @@
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QString>
 #include <format>
+#include <stdexcept>
+#include <string>
 
 namespace abregefeur::data {
 

@@ -1,6 +1,7 @@
 #include "artifact_view.hpp"
 
 #include <QUuid>
+#include <filesystem>
 
 #include <abregefeur/data/artifact_type.hpp>
 

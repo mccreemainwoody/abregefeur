@@ -3,7 +3,6 @@
 #include <QDateTime>
 #include <QSqlQuery>
 #include <QUuid>
-
 #include <optional>
 #include <string>
 

@@ -12,6 +12,7 @@
 
 #include <liborm/database.hpp>
 #include <liborm/utils/timestamp.hpp>
+#include <utility>
 
 namespace liborm::repository {
 
@@ -55,7 +56,7 @@ namespace liborm::repository {
             results.push_back(T(query));
         }
 
-        return results;
+        return std::move(results);
     }
 
     template <TEntity T>

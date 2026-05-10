@@ -1,11 +1,13 @@
 #pragma once
 
 #include <QDateTime>
+#include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QUuid>
 #include <filesystem>
 #include <liborm/entity.hpp>
 #include <optional>
+#include <string>
 
 #include <abregefeur/data/artifact_type.hpp>
 

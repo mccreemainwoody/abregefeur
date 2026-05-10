@@ -1,6 +1,8 @@
 #pragma once
 
 #include <libai/providers/ai_provider.hpp>
+#include <string>
+#include <vector>
 
 #include <abregefeur/data/artifact.hpp>
 #include <abregefeur/data/artifact_type.hpp>

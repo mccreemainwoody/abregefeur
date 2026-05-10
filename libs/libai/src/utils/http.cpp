@@ -1,6 +1,11 @@
 #include <libai/utils/http.hpp>
 
+#include <curl/curl.h>
+#include <cstddef>
+#include <format>
 #include <memory>
+#include <stdexcept>
+#include <string>
 
 using nlohmann::json;
 

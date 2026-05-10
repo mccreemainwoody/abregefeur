@@ -18,15 +18,8 @@ namespace abregefeur::triggers {
     }
 
     QList<NoteView> NotesTriggers::getNotes() {
-        const auto notes = noteRecorder_.getNotes();
-        QList<NoteView> results;
-        results.reserve(static_cast<qsizetype>(notes.size()));
-
-        for (const auto& note : notes) {
-            results.push_back(toNoteView(note));
-        }
-
-        return results;
+        return noteRecorder_.getNotes() | std::views::transform(toNoteView) |
+               std::ranges::to<QList<NoteView>>();
     }
 
     NoteView NotesTriggers::addNote(const QString& content) {
