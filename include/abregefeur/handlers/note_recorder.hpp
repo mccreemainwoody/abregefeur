@@ -1,0 +1,19 @@
+#pragma once
+
+#include <QUuid>
+#include <string>
+#include <vector>
+
+#include <abregefeur/data/note.hpp>
+
+namespace abregefeur::handlers {
+
+    class NoteRecorder {
+       public:
+        std::vector<data::Note> getNotes();
+        data::Note addNote(const std::string& content);
+        void updateNote(const QUuid& id, const std::string& content);
+        void removeNote(const QUuid& id);
+    };
+
+}  // namespace abregefeur::handlers

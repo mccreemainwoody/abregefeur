@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+
+Name[fr]=AbregeFeur
+Name=AbregeFeur
+
+GenericName[fr]="Synthétisation de notes par l'IA"
+GenericName="Synthesizing notes using AI"
+
+Keywords[fr]=notes;AI
+Keywords=notes;AI
+
+Exec=abregefeur
+Terminal=false
+Categories=Utility;Education;TextEditor;Qt
