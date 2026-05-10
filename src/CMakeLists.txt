@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.25)
 
-find_package(Qt6 6.10 REQUIRED COMPONENTS Core Quick Sql)
+include(GNUInstallDirs)
+
+find_package(Qt6 6.10 REQUIRED COMPONENTS Core Quick Qml Sql)
 
 qt_standard_project_setup(REQUIRES 6.10)
 qt_policy(SET QTP0005 NEW)
@@ -28,3 +30,16 @@ target_link_libraries(abregefeur
         AbregeFeur::Triggers
         abregefeur_qmlplugin
 )
+
+install(TARGETS abregefeur
+    BUNDLE
+        DESTINATION .
+    RUNTIME
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+qt_generate_deploy_qml_app_script(TARGET abregefeur
+    OUTPUT_SCRIPT
+        deploy_script
+)
+install(SCRIPT ${deploy_script})
