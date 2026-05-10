@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "ai_provider.hpp"
-#include "libai/utils/http.hpp"
+#include <libai/providers/ai_provider.hpp>
+#include <libai/utils/http.hpp>
 
 namespace libai::providers {
 
