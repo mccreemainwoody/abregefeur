@@ -5,6 +5,7 @@ option(LIBORM_USE_STATIC_LIBS "Build liborm as a static library" OFF)
 set(LIBORM_LIBRARY_VERSION 0.1.0)
 set(LIBORM_LIBRARY_VERSION_MAJOR 0)
 
+include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
 find_package(Qt6 6.10 REQUIRED COMPONENTS Core Sql)
@@ -23,7 +24,8 @@ set_target_properties(liborm PROPERTIES
 
 target_include_directories(liborm
     PUBLIC
-        include/
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     PRIVATE
         detail/
 )
@@ -31,6 +33,8 @@ target_include_directories(liborm
 add_subdirectory(src)
 
 install(TARGETS liborm
+    EXPORT
+        libormTargets
     ARCHIVE
         DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY
@@ -42,4 +46,27 @@ install(TARGETS liborm
 )
 install(DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+install(EXPORT libormTargets
+    NAMESPACE AbregeFeur::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/liborm
+)
+
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libormConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/libormConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/liborm
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/libormConfigVersion.cmake
+    VERSION ${LIBORM_LIBRARY_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/libormConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/libormConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/liborm
 )
