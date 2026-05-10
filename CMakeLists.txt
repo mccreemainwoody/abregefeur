@@ -21,6 +21,7 @@ set(LIBORM_USE_STATIC_LIBS
 # NOTE: necessary to have proper Qt setup during deployment
 find_package(Qt6 6.10 REQUIRED COMPONENTS Core Quick Qml Sql)
 
+add_subdirectory(assets)
 add_subdirectory(libs/libai)
 add_subdirectory(libs/liborm)
 add_subdirectory(src)
